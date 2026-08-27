@@ -57,16 +57,10 @@ def adjust_results4_isadog(results_dic, dogfile):
                             'as-a' dog and 0 = Classifier classifies image  
                             'as-NOT-a' dog.
      dogfile - A text file that contains names of all dogs from the classifier
-               function and dog names from the pet image files. This file has 
-               one dog name per line dog names are all in lowercase with 
-               spaces separating the distinct words of the dog name. Dog names
-               from the classifier function can be a string of dog names separated
-               by commas when a particular breed of dog has multiple dog names 
-               associated with that breed (ex. maltese dog, maltese terrier, 
-               maltese) (string - indicates text file's filename)
+               function and dog names from the pet image files.
     Returns:
            None - results_dic is mutable data type so no return needed.
-    """    
+    """
 
     # Créer un dictionnaire vide pour les noms des chiens
     dognames_dic = dict()
@@ -97,10 +91,17 @@ def adjust_results4_isadog(results_dic, dogfile):
             pet_is_dog = 0
 
         # Vérifier si la prédiction du classifier est un chien
-        if classifier_label in dognames_dic:
-            classifier_is_dog = 1
-        else:
-            classifier_is_dog = 0
+        classifier_is_dog = 0
+
+        # Le classifier peut retourner plusieurs alias séparés par des virgules
+        classifier_labels = classifier_label.split(",")
+
+        for label in classifier_labels:
+            label = label.strip()
+
+            if label in dognames_dic:
+                classifier_is_dog = 1
+                break
 
         # Ajouter les deux nouveaux résultats
         results_dic[key].extend([pet_is_dog, classifier_is_dog])
